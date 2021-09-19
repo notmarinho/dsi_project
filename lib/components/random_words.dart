@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_new
+
 import 'dart:developer';
 
 import 'package:english_words/english_words.dart';
@@ -40,15 +42,23 @@ class _RandomWordsState extends State<RandomWords> {
             pair.asPascalCase,
             style: _biggerFont,
           ),
-          trailing: Icon(
-            alreadySaved ? Icons.favorite : Icons.favorite_border,
-            color: alreadySaved ? Colors.red : null,
+          // trailing: Icon(
+          //   alreadySaved ? Icons.favorite : Icons.favorite_border,
+          //   color: alreadySaved ? Colors.red : null,
+          // ),
+          trailing: Column(
+            children: <Widget>[
+              new IconButton(
+                  onPressed: () {
+                    setState(() {
+                      alreadySaved ? _saved.remove(pair) : _saved.add(pair);
+                    });
+                  },
+                  color: alreadySaved ? Colors.red : null,
+                  icon: new Icon(
+                      alreadySaved ? Icons.favorite : Icons.favorite_border))
+            ],
           ),
-          onTap: () {
-            setState(() {
-              alreadySaved ? _saved.remove(pair) : _saved.add(pair);
-            });
-          },
         ),
       );
     }
