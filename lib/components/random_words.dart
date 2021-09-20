@@ -1,7 +1,5 @@
 // ignore_for_file: unnecessary_new
 
-import 'dart:developer';
-
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 
@@ -21,10 +19,9 @@ class _RandomWordsState extends State<RandomWords> {
   Widget build(BuildContext context) {
     Widget _buildRow(WordPair pair, index) {
       final alreadySaved = _saved.contains(pair);
-      final item = _suggestions[index];
 
       return Dismissible(
-        key: Key(item.asPascalCase),
+        key: Key(pair.asPascalCase),
         onDismissed: (direction) {
           setState(() {
             _suggestions.removeAt(index);
@@ -34,7 +31,7 @@ class _RandomWordsState extends State<RandomWords> {
           });
 
           ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('$item foi excluido')));
+              .showSnackBar(SnackBar(content: Text('$pair foi excluido')));
         },
         background: Container(color: Colors.red),
         child: ListTile(
@@ -42,10 +39,6 @@ class _RandomWordsState extends State<RandomWords> {
             pair.asPascalCase,
             style: _biggerFont,
           ),
-          // trailing: Icon(
-          //   alreadySaved ? Icons.favorite : Icons.favorite_border,
-          //   color: alreadySaved ? Colors.red : null,
-          // ),
           trailing: Column(
             children: <Widget>[
               new IconButton(
@@ -84,7 +77,6 @@ class _RandomWordsState extends State<RandomWords> {
     void _pushSaved() {
       Navigator.of(context).push(
         MaterialPageRoute<void>(
-          // NEW lines from here...
           builder: (BuildContext context) {
             final tiles = _saved.map(
               (WordPair pair) {

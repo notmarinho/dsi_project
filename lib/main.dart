@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.white,
       ),
-      home: RandomWords(),
+      home: const RandomWords(),
     );
   }
 }
