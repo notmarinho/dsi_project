@@ -12,7 +12,7 @@ class RandomWords extends StatefulWidget {
 }
 
 class _RandomWordsState extends State<RandomWords> {
-  final _suggestions = <WordPair>[];
+  List<WordPair> _suggestions = <WordPair>[];
   final _saved = <WordPair>{};
   final _biggerFont = const TextStyle(fontSize: 18.0);
 
@@ -39,13 +39,23 @@ class _RandomWordsState extends State<RandomWords> {
             .showSnackBar(SnackBar(content: Text('$pair foi excluido')));
       }
 
-      void editPair() {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => new EditScreen(
-                      newPairValue: pair.asPascalCase,
-                    )));
+      void editPair() async {
+        final newListValues = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => new EditScreen(
+              newPairValue: pair.asPascalCase,
+              listOfPairs: _suggestions,
+              index: index,
+            ),
+          ),
+        );
+
+        if (newListValues != null) {
+          setState(() {
+            _suggestions = newListValues;
+          });
+        }
       }
 
       return Dismissible(
