@@ -20,18 +20,30 @@ class _RandomWordsState extends State<RandomWords> {
     Widget _buildRow(WordPair pair, index) {
       final alreadySaved = _saved.contains(pair);
 
+      void favoritePair() {
+        setState(() {
+          alreadySaved ? _saved.remove(pair) : _saved.add(pair);
+        });
+      }
+
+      void removePair() {
+        setState(() {
+          _suggestions.removeAt(index);
+          if (_saved.contains(pair)) {
+            _saved.remove(pair);
+          }
+        });
+
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('$pair foi excluido')));
+      }
+
+      
+
       return Dismissible(
         key: Key(pair.asPascalCase),
         onDismissed: (direction) {
-          setState(() {
-            _suggestions.removeAt(index);
-            if (_saved.contains(pair)) {
-              _saved.remove(pair);
-            }
-          });
-
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('$pair foi excluido')));
+          removePair();
         },
         background: Container(color: Colors.red),
         child: ListTile(
@@ -43,9 +55,7 @@ class _RandomWordsState extends State<RandomWords> {
             children: <Widget>[
               new IconButton(
                   onPressed: () {
-                    setState(() {
-                      alreadySaved ? _saved.remove(pair) : _saved.add(pair);
-                    });
+                    favoritePair();
                   },
                   color: alreadySaved ? Colors.red : null,
                   icon: new Icon(
