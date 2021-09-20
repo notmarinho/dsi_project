@@ -2,6 +2,7 @@
 
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import '../pages/edit_screen.dart';
 
 class RandomWords extends StatefulWidget {
   const RandomWords({Key? key}) : super(key: key);
@@ -38,7 +39,14 @@ class _RandomWordsState extends State<RandomWords> {
             .showSnackBar(SnackBar(content: Text('$pair foi excluido')));
       }
 
-      
+      void editPair() {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => new EditScreen(
+                      newPairValue: pair.asPascalCase,
+                    )));
+      }
 
       return Dismissible(
         key: Key(pair.asPascalCase),
@@ -47,6 +55,9 @@ class _RandomWordsState extends State<RandomWords> {
         },
         background: Container(color: Colors.red),
         child: ListTile(
+          onTap: () {
+            editPair();
+          },
           title: Text(
             pair.asPascalCase,
             style: _biggerFont,
@@ -68,7 +79,7 @@ class _RandomWordsState extends State<RandomWords> {
 
     Widget _buildSuggestions() {
       return ListView.builder(
-        padding: const EdgeInsets.all(16),
+        // padding: const EdgeInsets.all(16),
         itemBuilder: (BuildContext _context, int i) {
           if (i.isOdd) {
             return const Divider();
