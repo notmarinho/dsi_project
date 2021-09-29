@@ -2,7 +2,9 @@
 
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
-import '../pages/edit_screen.dart';
+import 'edit_screen.dart';
+
+import '../components/list_item.dart';
 
 class RandomWords extends StatefulWidget {
   const RandomWords({Key? key}) : super(key: key);
@@ -64,25 +66,11 @@ class _RandomWordsState extends State<RandomWords> {
           removePair();
         },
         background: Container(color: Colors.red),
-        child: ListTile(
-          onTap: () {
-            editPair();
-          },
-          title: Text(
-            pair.asPascalCase,
-            style: _biggerFont,
-          ),
-          trailing: Column(
-            children: <Widget>[
-              new IconButton(
-                  onPressed: () {
-                    favoritePair();
-                  },
-                  color: alreadySaved ? Colors.red : null,
-                  icon: new Icon(
-                      alreadySaved ? Icons.favorite : Icons.favorite_border))
-            ],
-          ),
+        child: ListItem(
+          pair: pair,
+          isSaved: alreadySaved,
+          edit: editPair,
+          favorite: favoritePair,
         ),
       );
     }

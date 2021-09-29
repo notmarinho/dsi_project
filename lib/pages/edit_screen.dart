@@ -1,7 +1,6 @@
 // ignore_for_file: must_be_immutable
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
-import '../components/random_words.dart';
 
 class EditScreen extends StatefulWidget {
   EditScreen(

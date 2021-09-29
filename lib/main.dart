@@ -1,4 +1,4 @@
-import 'package:dsi_project/components/random_words.dart';
+import 'package:dsi_project/pages/random_words.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
