@@ -2,6 +2,10 @@
 
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'saved_words.dart';
 import 'edit_screen.dart';
 
 import '../components/list_item.dart';
@@ -20,13 +24,25 @@ class _RandomWordsState extends State<RandomWords> {
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference savedWords =
+        FirebaseFirestore.instance.collection('saved');
+
     Widget _buildRow(WordPair pair, index) {
       final alreadySaved = _saved.contains(pair);
 
-      void favoritePair() {
+      Future<void> favoritePair() async {
         setState(() {
           alreadySaved ? _saved.remove(pair) : _saved.add(pair);
         });
+        return savedWords
+            .doc(pair.asUpperCase)
+            .set({
+              'first': pair.first,
+              'second': pair.second,
+              'full': pair.asPascalCase
+            })
+            .then((value) => print("Word saved"))
+            .catchError((error) => print('Failed to save word'));
       }
 
       void removePair() {
@@ -94,34 +110,51 @@ class _RandomWordsState extends State<RandomWords> {
     }
 
     void _pushSaved() {
-      Navigator.of(context).push(
-        MaterialPageRoute<void>(
-          builder: (BuildContext context) {
-            final tiles = _saved.map(
-              (WordPair pair) {
-                return ListTile(
-                  title: Text(
-                    pair.asPascalCase,
-                    style: _biggerFont,
-                  ),
-                );
-              },
-            );
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const SavedWords()));
+      // Navigator.of(context).push(
+      //   MaterialPageRoute<void>(
+      //     builder: (BuildContext context) {
+      //       final tiles = _saved.map(
+      //         (WordPair pair) {
+      //           return ListTile(
+      //             title: Text(
+      //               pair.asPascalCase,
+      //               style: _biggerFont,
+      //             ),
+      //           );
+      //         },
+      //       );
 
-            final divided = ListTile.divideTiles(
-              context: context,
-              tiles: tiles,
-            ).toList();
+      //       final divided = ListTile.divideTiles(
+      //         context: context,
+      //         tiles: tiles,
+      //       ).toList();
 
-            return Scaffold(
-              appBar: AppBar(
-                title: const Text('Saved Suggestions'),
-              ),
-              body: ListView(children: divided),
-            );
-          }, // ...to here.
-        ),
-      );
+      //       return Scaffold(
+      //         appBar: AppBar(
+      //           title: const Text('Saved Suggestions'),
+      //         ),
+      //         body: Center(
+      //           child: StreamBuilder(
+      //             stream: FirebaseFirestore.instance
+      //                 .collection('saved')
+      //                 .snapshots(),
+      //             builder: (context, snapshot) {
+      //               if (!snapshot.hasData) return const Text('Loading...');
+      //               return ListView.builder(
+      //                   itemBuilder: (context, index) => Center(
+      //                         child: ListTile(
+      //                           title: Text(snapshot.data.['name']),
+      //                         ),
+      //                       ));
+      //             },
+      //           ),
+      //         ),
+      //       );
+      //     }, // ...to here.
+      //   ),
+      // );
     }
 
     return Scaffold(
